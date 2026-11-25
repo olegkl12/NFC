@@ -19,37 +19,39 @@
     justify-content: center;
     align-items: center;
     padding: 16px;
-    overflow-x: hidden;
+    overflow: hidden;
     position: relative;
   }
   #watermark {
     position: fixed;
-    top: -40%;
-    left: -40%;
-    width: 180%;
-    height: 180%;
+    top: -60%;
+    left: -60%;
+    width: 220%;
+    height: 220%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    gap: 40px 55px;
+    justify-content: space-between;
+    align-content: space-between;
+    gap: 28px 36px;
     transform: rotate(-25deg);
     pointer-events: none;
     z-index: 0;
     user-select: none;
-    filter: blur(2px);
+    filter: blur(1.5px);
   }
   .wm-item {
-    font-size: 56px;
+    font-size: 28px;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.07);
-    letter-spacing: 5px;
+    color: rgba(255, 255, 255, 0.06);
+    letter-spacing: 4px;
   }
   .card {
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 390px;
+    max-height: 92vh;
+    overflow-y: auto;
     background: rgba(24, 27, 34, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 24px;
@@ -167,15 +169,44 @@
     <input type="text" id="fDg" placeholder="https://2gis.com...">
 
     <label>Telegram (необязательно)</label>
-    <input type="text" id="fTg" placeholder="https://t.me...">
-
-    <label>Instagram (необязательно)<
+    <input type="text" id="fTg" placeholder=
 
 
-el>
+al !== '') {
+        resultUrl.searchParams.set(fields[j], val);
+      }
+    }
+
+    makeShort(resultUrl.toString(), function(shortLink) {
+      document.getElementById('outLink').value = shortLink;
+      document.getElementById('btnPreview').href = shortLink;
+      document.getElementById('resPanel').style.display = 'block';
+      btn.textContent = 'Создать короткую ссылку';
+      btn.disabled = false;
+    });
+  };
+
+  document.getElementById('btnCopy').onclick = function() {
+    var input = document.getElementById('outLink');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(input.value);
+    }
+    alert('Ссылка скопирована!');
+  };
+</script>
+</body>
+</html>"ht
+
+
+tps://t.me...">
+
+    <label>Instagram (необязательно)</label>
     <input type="text" id="fIg" placeholder="https://instagram.com...">
 
-    <button type="button" class="btn btn-white" id="btnCreate">Создать ссылку</button>
+    <button type="button" class="btn btn-white" id="btnCreate">Создать короткую ссылку</button>
 
     <div class="result-panel" id="resPanel">
       <label style="color: #ffffff; margin-top: 0; text-align: center;">Готовая ссылка для NFC:</label>
@@ -197,7 +228,7 @@ el>
 
 <script>
   var wm = document.getElementById('watermark');
-  for (var i = 0; i < 70; i++) {
+  for (var i = 0; i < 320; i++) {
     var span = document.createElement('span');
     span.className = 'wm-item';
     span.textContent = 'NFC';
@@ -250,12 +281,41 @@ el>
     makeButton('ig', 'Наш Instagram', 'btn-insta');
   }
 
+  function makeShort(longUrl, done) {
+    var cbName = 'shortcb_' + Math.floor(Math.random() * 1000000);
+    var timer = setTimeout(function() {
+      done(longUrl);
+    }, 3000);
+
+    window[cbName] = function(res) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (res && res.shorturl) {
+        done(res.shorturl);
+      } else {
+        done(longUrl);
+      }
+    };
+
+    var sc = document.createElement('script');
+    sc.src = 'https://is.gd' + cbName + '&url=' + encodeURIComponent(longUrl);
+    sc.onerror = function() {
+      clearTimeout(timer);
+      done(longUrl);
+    };
+    document.body.appendChild(sc);
+  }
+
   document.getElementById('btnCreate').onclick = function() {
     var nameVal = document.getElementById('fName').value.trim();
     if (!nameVal) {
       alert('Введите название заведения!');
       return;
     }
+
+    var btn = document.getElementById('btnCreate');
+    btn.textContent = 'Сокращаем ссылку...';
+    btn.disabled = true;
 
     var base = window.location.origin + window.location.pathname;
     var resultUrl = new URL(base);
@@ -266,27 +326,4 @@ el>
 
     for (var j = 0; j < fields.length; j++) {
       var val = document.getElementById(ids[j]).value.trim();
-      if (val !== '') {
-        resultUrl.searchParams.set(fields[j], val);
-      }
-    }
-
-    var finalStr = resultUrl.toString();
-    document.getElementById('outLink').value = finalStr;
-    document.getElementById('btnPreview').href = finalStr;
-    document.getElementById('resPanel').style.display = 'block';
-  };
-
-  document.getElementById('btnCopy').onclick = function() {
-    var input = document.getElementById('outLink');
-    input.select();
-    input.setSelectionRange(0, 99999);
-    document.execCommand('copy');
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(input.value);
-    }
-    alert('Ссылка скопирована!');
-  };
-</script>
-</body>
-</html>/lab
+      if (v
