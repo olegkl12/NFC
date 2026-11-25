@@ -13,24 +13,54 @@
         }
         html, body {
             width: 100%;
-            overflow-x: hidden;
-            background: radial-gradient(circle at top right, #1e2538, #0b0d12 70%);
-            color: #ffffff;
             min-height: 100vh;
+            overflow-x: hidden;
+            background: radial-gradient(circle at top right, #1e2538, #090b10 75%);
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 16px;
+            position: relative;
+        }
+        /* РАЗМЫТЫЙ ПОВЕРНУТЫЙ ФОН С НАДПИСЯМИ NFC */
+        .bg-pattern {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 45px 60px;
+            transform: rotate(-28deg);
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+            filter: blur(3px);
+            opacity: 0.06;
+        }
+        .bg-pattern span {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #ffffff;
         }
         .container {
+            position: relative;
+            z-index: 1;
             width: 100%;
             max-width: 390px;
             margin: 0 auto;
-            background: rgba(26, 29, 36, 0.92);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(24, 27, 34, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 28px;
             padding: 32px 22px;
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         .client-view, .admin-view {
             display: none;
@@ -103,7 +133,10 @@
         }
         .btn-yandex { background: #ffcc00; color: #111111; }
         .btn-2gis { background: #2ab930; color: #ffffff; }
-        .btn-tg { background: #24A1DE; color: #ffffff; }
+        .btn-tg { background: #24A1DE;
+
+
+color: #ffffff; }
         .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
         
         .admin-title {
@@ -132,54 +165,7 @@
             padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(15, 17, 21,
-
-
-<span class="logo-initials" id="outLogoText">NFC</span>
-            <img class="logo-img" id="outLogoImg" alt="Logo" onerror="this.style.display='none'; document.getElementById('outLogoText').style.display='block';">
-        </div>
-        <h1 id="outName">Название заведения</h1>
-        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
-        <div class="links" id="outLinks"></div>
-    </div>
-
-    <div class="footer">NFC SMART SYSTEM</div>
-</div>
-
-<script>
-    var params = new URLSearchParams(window.location.search);
-    var clientName = params.get('n');
-
-    if (clientName) {
-        document.getElementById('authView').style.display = 'none';
-        document.getElementById('adminView').style.display = 'none';
-        document.getElementById('clientView').style.display = 'block';
-        document.title = clientName;
-        document.getElementById('outName').textContent = clientName;
-        
-        var words = clientName.trim().split(/\s+/);
-        var w1 = words.shift() || 'N';
-        var w2 = words.shift() || '';
-        document.getElementById('outLogoText').textContent = w1.charAt(0) + w2.charAt(0);
-
-        var logoUrl = params.get('img');
-        if (logoUrl) {
-            var imgEl = document.getElementById('outLogoImg');
-            imgEl.src = logoUrl;
-            imgEl.style.display = 'block';
-            document.getElementById('outLogoText').style.display = 'none';
-        }
-
-        var sub = params.get('s');
-        if (sub) document.getElementById('outSub').textContent = sub;
-
-        var linksContainer = document.getElementById('outLinks');
-        function addBtn(url, text, cls) {
-            if (!url) return;
-            var a = document.createElement('a'); 0
-
-
-.9);
+            background: rgba(15, 17, 21, 0.9);
             color: #fff;
             font-size: 14px;
             outline: none;
@@ -225,15 +211,18 @@
 </head>
 <body>
 
+<!-- ФОН С РАЗМЫТЫМИ ПОВЕРНУТЫМИ НАДПИСЯМИ NFC -->
+<div class="bg-pattern" id="bgPattern"></div>
+
 <div class="container">
     <!-- ЭКРАН ВХОДА ПО ПАРОЛЮ -->
     <div id="authView">
         <div class="admin-title">Доступ ограничен</div>
         <div class="admin-desc">Введите пароль владельца для открытия генератора</div>
         <div class="input-group">
-            <input type="text" id="passInput" placeholder="Введите пароль..." style="text-align: center;" onkeydown="if(event.key==='Enter') checkPass()">
+            <input type="text" id="passInput" placeholder="Введите пароль..." style="text-align: center;">
         </div>
-        <button type="button" class="btn btn-generate" onclick="checkPass()">Войти в панель</button>
+        <button type="button" class="btn btn-generate" id="btnEnter">Войти в панель</button>
     </div>
 
     <!-- РЕДАКТОР -->
@@ -263,23 +252,59 @@
         </div>
         <div class="input-group">
             <label>Telegram (необязательно)</label>
-            <input type="text" id="inTg" placeholder="https://t.me...">
+            <input type="text" id="inTg" placeholder="https://t.m
+Статьи, новости и видео от популярных блогеров и СМИ | Будь в теме — будь в Дзене
+dzen.ru
+
+
+e...">
         </div>
         <div class="input-group">
             <label>Instagram (необязательно)</label>
             <input type="text" id="inInst" placeholder="https://instagram.com...">
         </div>
 
-        <button type="button" class="btn btn-generate" id="genBtn" onclick="createCard()">Создать короткую ссылку</button>
+        <button type="button" class="btn btn-generate" id="genBtn">Создать короткую ссылку</button>
 
         <div id="resultBox" class="result-box">
             <label style="color: #fff; text-align: center; margin-bottom: 8px;">Готовая ссылка для NFC-метки:</label>
             <input type="text" id="finalUrl" class="result-link" readonly>
-            <button type="button" class="btn btn-copy" onclick="copyCard()">Скопировать ссылку</button>
-            <button type="button" class="btn btn-preview" onclick="openCard()">Открыть карточку клиента</button>
+            <button type="button" class="btn btn-copy" id="btnCopy">Скопировать ссылку</button>
+            <button type="button" class="btn btn-preview" id="btnOpen">Открыть карточку клиента</button>
         </div>
     </div>
 
     <!-- КАРТОЧКА КЛИЕНТА -->
     <div id="clientView" class="client-view">
         <div class="logo-wrapper">
+            <span class="logo-initials" id="outLogoText">NFC</span>
+            <img class="logo-img" id="outLogoImg" alt="Logo">
+        </div>
+        <h1 id="outName">Название заведения</h1>
+        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
+        <div class="links" id="outLinks"></div>
+    </div>
+
+    <div class="footer">NFC SMART SYSTEM</div>
+</div>
+
+<script>
+    // Заполняем фон надписями NFC
+    var bg = document.getElementById('bgPattern');
+    var bgHtml = '';
+    for (var i = 0; i < 60; i++) {
+        bgHtml += '<span>NFC</span>';
+    }
+    bg.innerHTML = bgHtml;
+
+    // Проверка ссылки (клиент или админ)
+    var params = new URLSearchParams(window.location.search);
+    var clientName = params.get('n');
+
+    if (clientName) {
+        document.getElementById('authView').style.display = 'none';
+
+
+
+
+
