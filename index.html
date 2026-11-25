@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Smart Card</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0f1115 0%, #1a1d24 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+        }
+        /* Стили для клиентской карточки */
+        .client-view {
+            text-align: center;
+            display: none;
+        }
+        .logo-circle {
+            width: 76px;
+            height: 76px;
+            background: linear-gradient(135deg, #2b303b, #1c1f26);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            font-size: 14px;
+            color: #a0a6b5;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: transform 0.15s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-yandex { background: #ffcc00; color: #111111; }
+        .btn-2gis { background: #2ab930; color: #ffffff; }
+        .btn-tg { background: #24A1DE; color: #ffffff; }
+        .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
+        
+        /* Стили для вашей панели генератора */
+        .admin-view {
+            display: none;
+        }
+        .admin-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .admin-desc {
+            font-size: 13px;
+            color: #a0a6b5;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            color: #a0a6b5;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        input:focus {
+            border-color: #24A1DE;
+        }
+        .btn-generate {
+            background: #ffffff;
+            color: #0f1115;
+            margin-top: 8px;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 14px;
+            background: rgba(36, 161, 222, 0.1);
+
+
+lementById('outSub').textContent = sub;
+
+        const linksContainer = document.getElementById('outLinks');
+        const addBtn = (url, text, cls) => {
+            if (!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.className = 'btn ' + cls;
+            a.target = '_blank';
+            a.textContent = text;
+            linksContainer.appendChild(a);
+        };
+
+        addBtn(params.get('ya'), '★ Оставить отзыв в Яндекс Картах', 'btn-yandex');
+        addBtn(params.get('dg'), '★ Оценить нас в 2ГИС', 'btn-2gis');
+        addBtn(params.get('tg'), 'Наш Telegram-канал', 'btn-tg');
+        addBtn(params.get('ig'), 'Наш Instagram', 'btn-inst');
+    } else {
+        // Если параметров нет — показываем админку-генератор
+        document.getElementById('adminView').style.display = 'block';
+    }
+
+    function generateLink() {
+        const name = document.getElementById('inName').value.trim();
+        if (!name) {
+            alert('Введите название заведения!');
+            return;
+        }
+        const url = new URL(window.location.href.split('?')[0]);
+        url.searchParams.set('n', name);
+        
+        const sub = document.getElementById('inSub').value.trim();
+        if (sub) url.searchParams.set('s', sub);
+
+        const ya = document.getElementById('inYa').value.trim();
+        if (ya) url.searchParams.set('ya', ya);
+
+        const dg = document.getElementById('in2gis').value.trim();
+        if (dg) url.searchParams.set('dg', dg);
+
+        const tg = document.getElementById('inTg').value.trim();
+        if (tg) url.searchParams.set('tg', tg);
+
+        const ig = document.getElementById('inInst').value.trim();
+
+
+border: 1px solid rgba(36, 161, 222, 0.3);
+            border-radius: 14px;
+            display: none;
+        }
+        .result-link {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            color: #7dd3fc;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        .btn-copy {
+            background: #24A1DE;
+            color: #fff;
+            padding: 10px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .btn-preview {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px;
+            font-size: 13px;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 11px;
+            color: #5c6270;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- РЕЖИМ 1: ПАНЕЛЬ СОЗДАНИЯ ССЫЛКИ ДЛЯ ВАС -->
+    <div id="adminView" class="admin-view">
+        <div class="admin-title">Генератор NFC-карты</div>
+        <div class="admin-desc">Заполните данные клиента на месте — ссылка создастся мгновенно</div>
+
+        <div class="input-group">
+            <label>Название заведения *</label>
+            <input type="text" id="inName" placeholder="Например: Кофейня Бодрость">
+        </div>
+        <div class="input-group">
+            <label>Текст под названием</label>
+            <input type="text" id="inSub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
+        </div>
+        <div class="input-group">
+            <label>Ссылка на отзывы Яндекс Карты (оставьте пустым, если не нужно)</label>
+            <input type="url" id="inYa" placeholder="https://yandex.ru...">
+        </div>
+        <div class="input-group">
+            <label>Ссылка на отзывы 2ГИС</label>
+            <input type="url" id="in2gis" placeholder="https://2gis.ru...">
+        </div>
+        <div class="input-group">
+            <label>Ссылка на Telegram</label>
+            <input type="url" id="inTg" placeholder="https://t.me...">
+        </div>
+        <div class="input-group">
+            <label>Ссылка на Instagram</label>
+            <input type="url" id="inInst" placeholder="https://instagram.com...">
+        </div>
+
+        <button class="btn btn-generate" onclick="generateLink()">Создать персональную ссылку</button>
+
+        <div id="resultBox" class="result-box">
+            <label style="color: #fff;">Готовая ссылка для прошивки в NFC:</label>
+            <input type="text" id="finalUrl" class="result-link" readonly>
+            <button class="btn btn-copy" onclick="copyLink()">Скопировать ссылку</button>
+            <button class="btn btn-preview" onclick="openPreview()">Посмотреть как выглядит у клиента</button>
+        </div>
+    </div>
+
+    <!-- РЕЖИМ 2: КРАСИВАЯ СТРАНИЦА ДЛЯ КЛИЕНТА -->
+    <div id="clientView" class="client-view">
+        <div class="logo-circle" id="outLogo">NFC</div>
+        <h1 id="outName">Название заведения</h1>
+        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
+
+        <div class="links" id="outLinks"></div>
+    </div>
+
+    <div class="footer">NFC Smart System</div>
+</div>
+
+<script>
+    // Проверяем, есть ли в ссылке данные клиента (?n=...)
+    const params = new URLSearchParams(window.location.search);
+    const clientName = params.get('n');
+
+    if (clientName) {
+        // Показываем страницу клиента
+        document.getElementById('clientView').style.display = 'block';
+        document.title = clientName;
+        document.getElementById('outName').textContent = clientName;
+        
+        // Делаем красивые инициалы из первых букв слов
+        const words = clientName.replace(/[^а-яА-Яa-zA-Z0-9\s]/g, '').trim().split(/\s+/);
+        let initials = words[0] ? words[0][0] : 'N';
+        if (words.length > 1 && words[1][0]) initials += words[1][0];
+        document.getElementById('outLogo').textContent = initials;
+
+        const sub = params.get('s');
+        if (sub) document.getE
+
+
+
+
+
