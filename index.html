@@ -30,7 +30,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
         }
-        /* Стили для клиентской карточки */
         .client-view {
             text-align: center;
             display: none;
@@ -88,7 +87,6 @@
         .btn-tg { background: #24A1DE; color: #ffffff; }
         .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
         
-        /* Стили для вашей панели генератора */
         .admin-view {
             display: none;
         }
@@ -135,16 +133,11 @@
             margin-top: 20px;
             padding: 14px;
             background: rgba(36, 161, 222, 0.1);
+            border: 1px solid rgba(36, 161, 222, 0.3);
+            border-radius: 14px;
 
 
-lementById('outSub').textContent = sub;
-
-        const linksContainer = document.getElementById('outLinks');
-        const addBtn = (url, text, cls) => {
-            if (!url) return;
-            const a = document.createElement('a');
-            a.href = url;
-            a.className = 'btn ' + cls;
+a.className = 'btn ' + cls;
             a.target = '_blank';
             a.textContent = text;
             linksContainer.appendChild(a);
@@ -155,7 +148,6 @@ lementById('outSub').textContent = sub;
         addBtn(params.get('tg'), 'Наш Telegram-канал', 'btn-tg');
         addBtn(params.get('ig'), 'Наш Instagram', 'btn-inst');
     } else {
-        // Если параметров нет — показываем админку-генератор
         document.getElementById('adminView').style.display = 'block';
     }
 
@@ -165,7 +157,8 @@ lementById('outSub').textContent = sub;
             alert('Введите название заведения!');
             return;
         }
-        const url = new URL(window.location.href.split('?')[0]);
+        const baseUrl = window.location.href.split('?').at(0);
+        const url = new URL(baseUrl);
         url.searchParams.set('n', name);
         
         const sub = document.getElementById('inSub').value.trim();
@@ -181,11 +174,18 @@ lementById('outSub').textContent = sub;
         if (tg) url.searchParams.set('tg', tg);
 
         const ig = document.getElementById('inInst').value.trim();
+        if (ig) url.searchParams.set('ig', ig);
+
+        document.getElementById('finalUrl').value = url.toString();
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function copyLink() {
+        const copyText = document.getElementById('finalUrl');
+        copyText.select();
 
 
-border: 1px solid rgba(36, 161, 222, 0.3);
-            border-radius: 14px;
-            display: none;
+display: none;
         }
         .result-link {
             width: 100%;
@@ -222,7 +222,6 @@ border: 1px solid rgba(36, 161, 222, 0.3);
 <body>
 
 <div class="container">
-    <!-- РЕЖИМ 1: ПАНЕЛЬ СОЗДАНИЯ ССЫЛКИ ДЛЯ ВАС -->
     <div id="adminView" class="admin-view">
         <div class="admin-title">Генератор NFC-карты</div>
         <div class="admin-desc">Заполните данные клиента на месте — ссылка создастся мгновенно</div>
@@ -236,7 +235,7 @@ border: 1px solid rgba(36, 161, 222, 0.3);
             <input type="text" id="inSub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
         </div>
         <div class="input-group">
-            <label>Ссылка на отзывы Яндекс Карты (оставьте пустым, если не нужно)</label>
+            <label>Ссылка на отзывы Яндекс Карты</label>
             <input type="url" id="inYa" placeholder="https://yandex.ru...">
         </div>
         <div class="input-group">
@@ -262,37 +261,43 @@ border: 1px solid rgba(36, 161, 222, 0.3);
         </div>
     </div>
 
-    <!-- РЕЖИМ 2: КРАСИВАЯ СТРАНИЦА ДЛЯ КЛИЕНТА -->
     <div id="clientView" class="client-view">
         <div class="logo-circle" id="outLogo">NFC</div>
         <h1 id="outName">Название заведения</h1>
         <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
-
         <div class="links" id="outLinks"></div>
     </div>
 
-    <div class="footer">NFC Smart System</div>
+    <div class="footer">Интеллектуальная система NFC</div>
 </div>
 
 <script>
-    // Проверяем, есть ли в ссылке данные клиента (?n=...)
     const params = new URLSearchParams(window.location.search);
     const clientName = params.get('n');
 
     if (clientName) {
-        // Показываем страницу клиента
         document.getElementById('clientView').style.display = 'block';
         document.title = clientName;
         document.getElementById('outName').textContent = clientName;
         
-        // Делаем красивые инициалы из первых букв слов
-        const words = clientName.replace(/[^а-яА-Яa-zA-Z0-9\s]/g, '').trim().split(/\s+/);
-        let initials = words[0] ? words[0][0] : 'N';
-        if (words.length > 1 && words[1][0]) initials += words[1][0];
+        const cleanName = clientName.replace(/[^а-яА-Яa-zA-Z0-9\s]/g, '').trim();
+        const words = cleanName.split(/\s+/);
+        let initials = words.length > 0 && words.at(0) ? words.at(0).charAt(0) : 'N';
+        if (words.length > 1 && words.at(1)) {
+            initials += words.at(1).charAt(0);
+        }
         document.getElementById('outLogo').textContent = initials;
 
         const sub = params.get('s');
-        if (sub) document.getE
+        if (sub) document.getElementById('outSub').textContent = sub;
+
+        const linksContainer = document.getElementById('outLinks');
+        const addBtn = (url, text, cls) => {
+            if (!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+words.at
+words.at
 
 
 
