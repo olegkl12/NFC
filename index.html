@@ -1,8 +1,161 @@
-<!DOCTYPE html> <html lang="ru"> <head> <meta charset="UTF-8"> <meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>NFC Smart System</title> <style> :root { --bg-color: #0b0d12; --card-bg: rgba(22, 26, 36, 0.72); --card-border: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb; --input-bg: rgba(11, 13, 18, 0.65); } * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; } html, body { width: 100%; min-height: 100vh; min-height: 100dvh; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; display: flex; align-items: center; justify-content: center; position: relative; } .watermark-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='140' height='140' viewBox='0 0 140 140'%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-weight='800' font-size='20' fill='rgba(255,255,255,0.035)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-25 70 70)'%3ENFC%3C/text%3E%3C/svg%3E"); background-repeat: repeat; filter: blur(1.2px); } .container { position: relative; z-index: 1; width: 100%; max-width: 440px; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; } .glass-card { width: 100%; background: var(--card-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--card-border); border-radius: 24px; padding: 32px 24px 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65); display: flex; flex-direction: column; align-items: center; text-align: center; } .hidden { display: none !important; } .editor-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; } .editor-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; } .form-group { width: 100%; text-align: left; margin-bottom: 14px; } .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; } .form-group input, .form-group textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; color: var(--text-main); font-size: 14px; outline: none; transition: border-color 0.2s; } .form-group textarea { resize: vertical; min-height: 68px; } .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); } .btn-primary { width: 100%; padding: 14px; border: none; border-radius: 14px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s; } .btn-primary:hover { background: var(--accent-hover); } .btn-primary:active { transform: scale(0.98); } .btn-primary:disabled { opacity: 0.6; cursor: wait; } .result-box { width: 100%; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 10px; } .result-label { font-size: 12px; color: var(--text-muted); text-align: left; } .result-url-input { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 12px; color: #38bdf8; font-size: 13px; outline: none; word-break: break-all; } .result-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .btn-secondary { padding: 11px 10px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(255, 255, 255, 0.06); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: background 0.2s; } .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); } .avatar-wrap { width: 88px; height: 88px; border-radius: 50%; margin-bottom: 18px; overflow: hidden; display: flex; align-items: center; justifyctrl.abort(), 2500); try { const res = await fetch(url, { signal: ctrl.signal }); clearTimeout(id); if (res.ok) { const txt = (await res.text()).trim(); if (txt.startsWith('http')) return txt; } } catch (e) { clearTimeout(id); } return null; }; return (await fetchWithTimeout(`https://clck.ru{encodeURIComponent(longUrl)}`)) || (await fetchWithTimeout(`https://is.gd{encodeURIComponent(longUrl)}`)) || longUrl; } })(); </script> </body> </html>-co(!trimmed) return ''; return /^https?:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed; } function getInitials(name) { const clean = name.trim().replace(/["'«»]/g, ''); return clean.slice(0, 2).toUpperCase() || 'NF'; } function renderClientCard(p) { document.getElementById('client-view').classList.remove('hidden'); const name = p.get('n').trim(); const logo = normalizeUrl(p.get('l')); const desc = p.has('d') ? p.get('d').trim() : DEFAULT_DESC; document.title = name; document.getElementById('c-name').textContent = name; const descEl = document.getElementById('c-desc'); if (desc) descEl.textContent = desc; else descEl.classList.add('hidden'); const avatarEl = document.getElementById('c-avatar'); if (logo) { const img = document.createElement('img'); img.src = logo; img.alt = name; img.onerror = () => { avatarEl.innerHTML = `<span class="avatar-initials">${getInitials(name)}</span>`; }; avatarEl.appendChild(img); } else { avatarEl.innerHTML = `<span class="avatar-initials">${getInitials(name)}</span>`; } const buttonsConfig = [ { key: 'ya', label: 'Оставить отзыв в Яндекс Картах', cls: 'btn-yandex' }, { key: 'gis', label: 'Оставить отзыв в 2ГИС', cls: 'btn-2gis' }, { key: 'tg', label: 'Перейти в Telegram', cls: 'btn-tg' }, { key: 'ig', label: 'Перейти в Instagram', cls: 'btn-ig' } ]; const linksContainer = document.getElementById('c-links'); buttonsConfig.forEach(item => { const url = normalizeUrl(p.get(item.key)); if (url) { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.className = `social-btn ${item.cls}`; a.textContent = item.label; linksContainer.appendChild(a); } }); } function initEditor() { document.getElementById('editor-view').classList.remove('hidden'); const form = document.getElementById('nfc-form'); const genBtn = document.getElementById('generate-btn'); const resultBox = document.getElementById('result-box'); const resultUrlInput = document.getElementById('result-url'); const resultStatus = document.getElementById('result-status'); const copyBtn = document.getElementById('copy-btn'); const openBtn = document.getElementById('open-btn'); form.addEventListener('submit', async function (e) { e.preventDefault(); const name = document.getElementById('f-name').value.trim(); if (!name) return; const outParams = new URLSearchParams(); outParams.set('n', name); const logo = document.getElementById('f-logo').value.trim(); const desc = document.getElementById('f-desc').value.trim(); const ya = document.getElementById('f-ya').value.trim(); const gis = document.getElementById('f-gis').value.trim(); const tg = document.getElementById('f-tg').value.trim(); const ig = document.getElementById('f-ig').value.trim(); if (logo) outParams.set('l', logo); if (desc && desc !== DEFAULT_DESC) outParams.set('d', desc); if (ya) outParams.set('ya', ya); if (gis) outParams.set('gis', gis); if (tg) outParams.set('tg', tg); if (ig) outParams.set('ig', ig); const baseUrl = window.location.origin + window.location.pathname; const longUrl = `${baseUrl}?${outParams.toString()}`; genBtn.disabled = true; genBtn.textContent = 'Генерация ссылки...'; const finalUrl = await tryShortenUrl(longUrl); genBtn.disabled = false; genBtn.textContent = 'Создать короткую ссылку'; resultUrlInput.value = finalUrl; openBtn.href = finalUrl; resultStatus.textContent = finalUrl === longUrl ? 'Готовая ссылка (прямая):' : 'Короткая ссылка для NFC-метки готова:'; resultBox.classList.remove('hidden'); copyBtn.textContent = 'Скопировать ссылку'; }); copyBtn.addEventListener('click', function () { resultUrlInput.select(); resultUrlInput.setSelectionRange(0, 99999); navigator.clipboard.writeText(resultUrlInput.value).then(() => { copyBtn.textContent = 'Скопировано!'; setTimeout(() => { copyBtn.textContent = 'Скопировать ссылку'; }, 2000); }); }); } async function tryShortenUrl(longUrl) { if (!/^https?:\/\//i.test(longUrl) || ['localhost', '127.0.0.1'].includes(window.location.hostname)) { return longUrl; } const fetchWithTimeout = async (url) => { const ctrl = new AbortController(); const id = setTimeout(() =>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NFC Smart System</title>
+  <style>
+    :root { --bg: #0b0d12; --card: rgba(22, 26, 36, 0.72); --border: rgba(255, 255, 255, 0.08); --text: #fff; --muted: #94a3b8; --accent: #3b82f6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    html, body { width: 100%; min-height: 100dvh; background: var(--bg); color: var(--text); overflow-x: hidden; display: flex; align-items: center; justify-content: center; }
+    .watermark { position: fixed; inset: 0; z-index: 0; pointer-events: none; filter: blur(1.2px); background: repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-weight='800' font-size='20' fill='rgba(255,255,255,0.035)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-25 70 70)'%3ENFC%3C/text%3E%3C/svg%3E"); }
+    .container { position: relative; z-index: 1; width: 100%; max-width: 440px; padding: 20px 16px; }
+    .card { width: 100%; background: var(--card); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border); border-radius: 24px; padding: 32px 24px 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.65); display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .hidden { display: none !important; }
+    h1.ed-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    p.ed-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .fg { width: 100%; text-align: left; margin-bottom: 14px; }
+    .fg label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .fg input, .fg textarea { width: 100%; background: rgba(11,13,18,0.65); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; }
+    .fg textarea { resize: vertical; min-height: 68px; }
+    .fg input:focus, .fg textarea:focus { border-color: var(--accent); }
+    .btn-main { width: 100%; padding: 14px; border: none; border-radius: 14px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-main:disabled { opacity: 0.6; }
+    .res-box { width: 100%; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+    .res-lbl { font-size: 12px; color: var(--muted); text-align: left; }
+    .res-in { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: #38bdf8; font-size: 13px; outline: none; word-break: break-all; }
+    .res-act { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-sec { padding: 11px 10px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .avatar { width: 88px; height: 88px; border-radius: 50%; margin-bottom: 18px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid rgba(255,255,255,0.14); box-shadow: 0 10px 25px rgba(0,0,0,0.4); flex-shrink: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .initials { font-size: 30px; font-weight: 700; letter-spacing: 1px; color: #f8fafc; text-transform: uppercase; }
+    .p-title { font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 10px; word-break: break-word; }
+    .p-desc { font-size: 14px; line-height: 1.5; color: var(--muted); margin-bottom: 26px; word-break: break-word; }
+    .links { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+    .s-btn { width: 100%; padding: 15px 18px; border-radius: 14px; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+    .b-ya { background: #ffcc00; color: #111; }
+    .b-gis { background: #1fa83d; color: #fff; }
+    .b-tg { background: #24a1de; color: #fff; }
+    .b-ig { background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888); color: #fff; }
+    .footer { margin-top: 26px; font-size: 10px; font-weight: 700; letter-spacing: 2.2px; color: rgba(255,255,255,0.28); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="watermark"></div>
+  <main class="container">
+    <section id="ed" class="card hidden">
+      <h1 class="ed-title">Генератор NFC-визитки</h1>
+      <p class="ed-sub">Заполните данные для записи на чип NTAG213</p>
+      <form id="form" style="width:100%">
+        <div class="fg"><label>Название заведения *</label><input type="text" id="f-n" placeholder="Например: Кофейня Бодрость" required></div>
+        <div class="fg"><label>Ссылка на логотип (.jpg / .png)</label><input type="url" id="f-l" placeholder="https://example.com/logo.png"></div>
+        <div class="fg"><label>Текст под названием</label><textarea id="f-d">Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь</textarea></div>
+        <div class="fg"><label>Отзывы Яндекс Карты</label><input type="url" id="f-ya" placeholder="https://yandex.ru/maps/..."></div>
+        <div class="fg"><label>Отзывы 2ГИС</label><input type="url" id="f-gis" placeholder="https://2gis.ru/..."></div>
+        <div class="fg"><label>Telegram</label><input type="url" id="f-tg" placeholder="https://t.me/..."></div>
+        <div class="fg"><label>Instagram</label><input type="url" id="f-ig" placeholder="https://instagram.com/..."></div>
+        <button type="submit" id="g-btn" class="btn-main">Создать короткую ссылку</button>
+      </form>
+      <div id="r-box" class="res-box hidden">
+        <div class="res-lbl" id="r-st">Готовая ссылка для NFC-метки:</div>
+        <input type="text" id="r-url" class="res-in" readonly>
+        <div class="res-act">
+          <button type="button" id="c-btn" class="btn-sec">Скопировать ссылку</button>
+          <a id="o-btn" href="#" target="_blank" rel="noopener" class="btn-sec">Открыть карточку</a>
+        </div>
+      </div>
+      <div class="footer">NFC SMART SYSTEM</div>
+    </section>
 
+    <section id="cl" class="card hidden">
+      <div class="avatar" id="c-av"></div>
+      <h1 class="p-title" id="c-n"></h1>
+      <p class="p-desc" id="c-d"></p>
+      <div class="links" id="c-links"></div>
+      <div class="footer">NFC SMART SYSTEM</div>
+    </section>
+  </main>
 
-ntent: center; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid rgba(255, 255, 255, 0.14); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); flex-shrink: 0; } .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; } .avatar-initials { font-size: 30px; font-weight: 700; letter-spacing: 1px; color: #f8fafc; text-transform: uppercase; } .place-title { font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: 10px; word-break: break-word; } .place-desc { font-size: 14px; line-height: 1.5; color: var(--text-muted); margin-bottom: 26px; word-break: break-word; } .links-stack { width: 100%; display: flex; flex-direction: column; gap: 12px; } .social-btn { width: 100%; padding: 15px 18px; border-radius: 14px; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.15s, filter 0.15s; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); } .social-btn:active { transform: scale(0.98); } .social-btn:hover { filter: brightness(1.06); } .btn-yandex { background: #ffcc00; color: #111111; } .btn-2gis { background: #1fa83d; color: #ffffff; } .btn-tg { background: #24a1de; color: #ffffff; } .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; } .system-footer { margin-top: 26px; font-size: 10px; font-weight: 700; letter-spacing: 2.2px; color: rgba(255, 255, 255, 0.28); text-transform: uppercase; } </style> </head>
+  <script>
+    (function () {
+      const DEF = 'Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь';
+      const p = new URLSearchParams(location.search);
+      const norm = u => !u || !u.trim() ? '' : (/^https?:\/\//i.test(u.trim()) ? u.trim() : 'https://' + u.trim());
+      const init = n => (n.trim().replace(/["'«»]/g, '').slice(0, 2) || 'NF').toUpperCase();
 
-<body> <div class="watermark-bg"></div> <main class="container"> <section id="editor-view"class="glass-card hidden"> <h1 class="editor-title">Генератор NFC-визитки</h1> <pclass="editor-subtitle">Заполните данные для записи на чип NTAG213</p> <form id="nfc-form"style="width: 100%;"> <div class="form-group"> <label for="f-name">Название заведения *</label> <input type="text" id="f-name" placeholder="Например: Кофейня Бодрость" required> </div> <div class="form-group"> <label for="f-logo">Ссылка на логотип (.jpg / .png)</label> <input type="url" id="f-logo" placeholder="https://example.com"> </div> <
+      if (p.get('n') && p.get('n').trim()) {
+        document.getElementById('cl').classList.remove('hidden');
+        const name = p.get('n').trim(), logo = norm(p.get('l')), desc = p.has('d') ? p.get('d').trim() : DEF;
+        document.title = name;
+        document.getElementById('c-n').textContent = name;
+        const dEl = document.getElementById('c-d');
+        desc ? dEl.textContent = desc : dEl.classList.add('hidden');
 
-div class="form-group"> <label for="f-desc">Текст под названием</label> <textarea id="f-desc">Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь</textarea> </div> <divclass="form-group"> <label for="f-ya">Отзывы Яндекс Карты</label> <input type="url" id="f-ya"placeholder="https://yandex.ru..."> </div> <div class="form-group"> <label for="f-gis">Отзывы 2ГИС</label> <input type="url" id="f-gis" placeholder="https://2gis.ru..."> </div> <divclass="form-group"> <label for="f-tg">Telegram</label> <input type="url" id="f-tg"placeholder="https://t.me..."> </div> <div class="form-group"> <label for="f-ig">Instagram</label> <input type="url" id="f-ig" placeholder="https://instagram.com..."> </div> <button type="submit" id="generate-btn" class="btn-primary">Создать короткую ссылку</button> </form> <div id="result-box" class="result-box hidden"> <div class="result-label" id="result-status">Готовая ссылка для NFC-метки:</div> <input type="text" id="result-url" class="result-url-input" readonly> <div class="result-actions"> <button type="button"id="copy-btn" class="btn-secondary">Скопировать ссылку</button> <a id="open-btn" href="#"target="_blank" rel="noopener noreferrer" class="btn-secondary">Открыть карточку</a> </div> </div> <div class="system-footer">NFC SMART SYSTEM</div> </section> <section id="client-view"class="glass-card hidden"> <div class="avatar-wrap" id="c-avatar"></div> <h1 class="place-title" id="c-name"></h1> <p class="place-desc" id="c-desc"></p> <div class="links-stack"id="c-links"></div> <div class="system-footer">NFC SMART SYSTEM</div> </section> </main> <script> (function () { const DEFAULT_DESC = 'Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь'; const params = new URLSearchParams(window.location.search); const placeName = params.get('n'); if (placeName && placeName.trim() !== '') { renderClientCard(params); } else { initEditor(); } function normalizeUrl(raw) { if (!raw) return ''; const trimmed = raw.trim(); if
+        const av = document.getElementById('c-av');
+        if (logo) {
+          const img = new Image(); img.src = logo; img.alt = name;
+          img.onerror = () => av.innerHTML = `<span class="initials">${init(name)}</span>`;
+          av.appendChild(img);
+        } else av.innerHTML = `<span class="initials">${init(name)}</span>`;
+
+        const btns = [
+          { k: 'ya', t: 'Оставить отзыв в Яндекс Картах', c: 'b-ya' },
+          { k: 'gis', t: 'Оставить отзыв в 2ГИС', c: 'b-gis' },
+          { k: 'tg', t: 'Перейти в Telegram', c: 'b-tg' },
+          { k: 'ig', t: 'Перейти в Instagram', c: 'b-ig' }
+        ];
+        const box = document.getElementById('c-links');
+        btns.forEach(b => {
+          const u = norm(p.get(b.k));
+          if (u) {
+            const a = document.createElement('a');
+            a.href = u; a.target = '_blank'; a.rel = 'noopener';
+            a.className = `s-btn ${b.c}`; a.textContent = b.t;
+            box.appendChild(a);
+          }
+        });
+      } else {
+        document.getElementById('ed').classList.remove('hidden');
+        const gBtn = document.getElementById('g-btn'), rUrl = document.getElementById('r-url'), cBtn = document.getElementById('c-btn');
+        document.getElementById('form').addEventListener('submit', async e => {
+          e.preventDefault();
+          const name = document.getElementById('f-n').value.trim();
+          if (!name) return;
+          const out = new URLSearchParams(); out.set('n', name);
+          ['l', 'ya', 'gis', 'tg', 'ig'].forEach(k => { const v = document.getElementById('f-' + k).value.trim(); if (v) out.set(k, v); });
+          const d = document.getElementById('f-d').value.trim();
+          if (d && d !== DEF) out.set('d', d);
+
+          const long = `${location.origin}${location.pathname}?${out.toString()}`;
+          gBtn.disabled = true; gBtn.textContent = 'Генерация...';
+          const fin = await shorten(long);
+          gBtn.disabled = false; gBtn.textContent = 'Создать короткую ссылку';
+
+          rUrl.value = fin; document.getElementById('o-btn').href = fin;
+          document.getElementById('r-st').textContent = fin === long ? 'Готовая ссылка (прямая):' : 'Короткая ссылка для NFC-метки готова:';
+          document.getElementById('r-box').classList.remove('hidden');
+          cBtn.textContent = 'Скопировать ссылку';
+        });
+
+        cBtn.addEventListener('click', () => {
+          rUrl.select(); rUrl.setSelectionRange(0, 99999);
+          navigator.clipboard.writeText(rUrl.value).then(() => {
+            cBtn.textContent = 'Скопировано!';
+            setTimeout(() => cBtn.textContent = 'Скопировать ссылку', 2000);
+          });
+        });
+      }
+
+      async function shorten(u) {
+        if (!/^https?:\/\//i.test(u) || ['localhost', '127.0.0.1'].includes(location.hostname)) return u;
+        const get = async api => {
+          const c = new AbortController(), id = setTimeout(() => c.abort(), 2500);
+          try { const r = await fetch(api, { signal: c.signal }); clearTimeout(id); if (r.ok) { const t = (await r.text()).trim(); if (t.startsWith('http')) return t; } } catch (e) { clearTimeout(id); }
+          return null;
+        };
+        return (await get(`https://clck.ru/--?url=${encodeURIComponent(u)}`)) || (await get(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(u)}`)) || u;
+      }
+    })();
+  </script>
+</body>
+</html>
