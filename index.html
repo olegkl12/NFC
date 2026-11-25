@@ -2,14 +2,14 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NFC Smart System</title>
 <style>
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
   body {
     min-height: 100vh;
@@ -19,52 +19,50 @@
     justify-content: center;
     align-items: center;
     padding: 16px;
-    overflow: hidden;
+    overflow-x: hidden;
     position: relative;
   }
-  #watermark {
+  #bg-nfc {
     position: fixed;
-    top: -60%;
-    left: -60%;
-    width: 220%;
-    height: 220%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-content: space-between;
-    gap: 28px 36px;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    align-content: center;
+    justify-items: center;
+    gap: 24px 16px;
     transform: rotate(-25deg);
     pointer-events: none;
     z-index: 0;
     user-select: none;
     filter: blur(1.5px);
   }
-  .wm-item {
-    font-size: 28px;
+  .wm {
+    font-size: 22px;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.06);
-    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.055);
+    letter-spacing: 3px;
   }
   .card {
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 390px;
-    max-height: 92vh;
-    overflow-y: auto;
-    background: rgba(24, 27, 34, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 24px;
+    background: rgba(24, 27, 34, 0.93);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 26px;
     padding: 28px 22px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
   h2 {
     font-size: 21px;
     text-align: center;
     margin-bottom: 6px;
   }
-  .subtitle {
+  .sub {
     font-size: 13px;
     color: #9ca3af;
     text-align: center;
@@ -98,7 +96,7 @@
     border: none;
     border-radius: 14px;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 700;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
@@ -106,10 +104,10 @@
   .btn-white { background: #ffffff; color: #000000; margin-top: 18px; }
   .btn-blue { background: #24A1DE; color: #ffffff; }
   .btn-gray { background: #2e333d; color: #ffffff; }
-  .btn-yandex { background: #ffcc00; color: #000000; }
-  .btn-2gis { background: #2ab930; color: #ffffff; }
-  .btn-insta { background: #dc2743; color: #ffffff; }
-  .logo-box {
+  .btn-ya { background: #ffcc00; color: #000000; }
+  .btn-2g { background: #2ab930; color: #ffffff; }
+  .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #ffffff; }
+  .logo-circle {
     width: 84px;
     height: 84px;
     border-radius: 50%;
@@ -119,16 +117,16 @@
     justify-content: center;
     align-items: center;
     font-size: 28px;
-    font-weight: bold;
+    font-weight: 700;
     overflow: hidden;
     border: 2px solid rgba(255, 255, 255, 0.2);
   }
-  .logo-box img {
+  .logo-circle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .result-panel {
+  .res-box {
     margin-top: 18px;
     padding: 14px;
     background: #14222e;
@@ -141,189 +139,189 @@
     text-align: center;
     font-size: 11px;
     color: #5c6270;
+    letter-spacing: 0.5px;
   }
 </style>
 </head>
 <body>
 
-<div id="watermark"></div>
+<div id="bg-nfc"></div>
 
-<div class="card" id="mainCard">
-  <div id="editorBlock">
+<div class="card">
+  <div id="editor-view">
     <h2>Генератор NFC-карты</h2>
-    <p class="subtitle">Заполните нужные поля — пустые кнопки скроются</p>
+    <p class="sub">Заполните только нужные поля — пустые кнопки скроются</p>
 
     <label>Название заведения *</label>
-    <input type="text" id="fName" placeholder="Например: Кофейня Бодрость">
+    <input type="text" id="in-name" placeholder="Например: Кофейня Бодрость">
 
     <label>Прямая ссылка на логотип (необязательно)</label>
-    <input type="text" id="fImg" placeholder="https://... (.jpg или .png)">
+    <input type="text" id="in-img" placeholder="https://... (.jpg или .png)">
 
     <label>Текст под названием</label>
-    <input type="text" id="fSub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
+    <input type="text" id="in-sub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
 
     <label>Отзывы Яндекс Карты (необязательно)</label>
-    <input type="text" id="fYa" placeholder="https://yandex.ru...">
+    <input type="text" id="in-ya" placeholder="https://yandex.ru...">
 
     <label>Отзывы 2ГИС (необязательно)</label>
-    <input type="text" id="fDg" placeholder="https://2gis.com...">
-
-    <label>Telegram (необязательно)</label>
-    <input type="text" id="fTg" placeholder=
+Статьи, новости и видео от популярных блогеров и СМИ | Будь в теме — будь в Дзене
+dzen.ru
 
 
-al !== '') {
-        resultUrl.searchParams.set(fields[j], val);
-      }
+== '') u.searchParams.set(keys[i], val);
     }
 
-    makeShort(resultUrl.toString(), function(shortLink) {
-      document.getElementById('outLink').value = shortLink;
-      document.getElementById('btnPreview').href = shortLink;
-      document.getElementById('resPanel').style.display = 'block';
+    shorten(u.toString(), function(finalUrl) {
+      document.getElementById('out-url').value = finalUrl;
+      document.getElementById('btn-open').href = finalUrl;
+      document.getElementById('res-box').style.display = 'block';
       btn.textContent = 'Создать короткую ссылку';
       btn.disabled = false;
     });
   };
 
-  document.getElementById('btnCopy').onclick = function() {
-    var input = document.getElementById('outLink');
-    input.select();
-    input.setSelectionRange(0, 99999);
+  document.getElementById('btn-copy').onclick = function() {
+    var inp = document.getElementById('out-url');
+    inp.select();
+    inp.setSelectionRange(0, 99999);
     document.execCommand('copy');
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(input.value);
-    }
+    if (navigator.clipboard) navigator.clipboard.writeText(inp.value);
     alert('Ссылка скопирована!');
   };
 </script>
 </body>
-</html>"ht
+</html> <i
 
 
-tps://t.me...">
+nput type="text" id="in-dg" placeholder="https://2gis.com...">
+
+    <label>Telegram (необязательно)</label>
+    <input type="text" id="in-tg" placeholder="https://t.me...">
 
     <label>Instagram (необязательно)</label>
-    <input type="text" id="fIg" placeholder="https://instagram.com...">
+    <input type="text" id="in-ig" placeholder="https://instagram.com...">
 
-    <button type="button" class="btn btn-white" id="btnCreate">Создать короткую ссылку</button>
+    <button type="button" class="btn btn-white" id="btn-gen">Создать короткую ссылку</button>
 
-    <div class="result-panel" id="resPanel">
+    <div class="res-box" id="res-box">
       <label style="color: #ffffff; margin-top: 0; text-align: center;">Готовая ссылка для NFC:</label>
-      <input type="text" id="outLink" readonly style="color: #7dd3fc; text-align: center;">
-      <button type="button" class="btn btn-blue" id="btnCopy">Скопировать ссылку</button>
-      <a class="btn btn-gray" id="btnPreview" target="_blank">Открыть карточку клиента</a>
+      <input type="text" id="out-url" readonly style="color: #7dd3fc; text-align: center;">
+      <button type="button" class="btn btn-blue" id="btn-copy">Скопировать ссылку</button>
+      <a class="btn btn-gray" id="btn-open" target="_blank">Открыть карточку клиента</a>
     </div>
   </div>
 
-  <div id="clientBlock" style="display: none; text-align: center;">
-    <div class="logo-box" id="cLogo"></div>
-    <h2 id="cTitle"></h2>
-    <p class="subtitle" id="cSub"></p>
-    <div id="cButtons"></div>
+  <div id="client-view" style="display: none; text-align: center;">
+    <div class="logo-circle" id="c-logo"></div>
+    <h2 id="c-name"></h2>
+    <p class="sub" id="c-sub"></p>
+    <div id="c-btns"></div>
   </div>
 
   <div class="footer">NFC SMART SYSTEM</div>
 </div>
 
 <script>
-  var wm = document.getElementById('watermark');
-  for (var i = 0; i < 320; i++) {
-    var span = document.createElement('span');
-    span.className = 'wm-item';
-    span.textContent = 'NFC';
-    wm.appendChild(span);
+  var bg = document.getElementById('bg-nfc');
+  for (var i = 0; i < 400; i++) {
+    var s = document.createElement('span');
+    s.className = 'wm';
+    s.textContent = 'NFC';
+    bg.appendChild(s);
   }
 
-  var params = new URLSearchParams(window.location.search);
-  var clientName = params.get('n');
+  var q = new URLSearchParams(window.location.search);
+  var cName = q.get('n');
 
-  if (clientName) {
-    document.getElementById('editorBlock').style.display = 'none';
-    document.getElementById('clientBlock').style.display = 'block';
-    document.title = clientName;
-    document.getElementById('cTitle').textContent = clientName;
+  if (cName) {
+    document.getElementById('editor-view').style.display = 'none';
+    document.getElementById('client-view').style.display = 'block';
+    document.title = cName;
+    document.getElementById('c-name').textContent = cName;
 
-    var subText = params.get('s');
-    if (subText) {
-      document.getElementById('cSub').textContent = subText;
-    }
+    var cSub = q.get('s');
+    if (cSub) document.getElementById('c-sub').textContent = cSub;
 
-    var logoBox = document.getElementById('cLogo');
-    var imgUrl = params.get('img');
-    if (imgUrl) {
-      var img = document.createElement('img');
-      img.src = imgUrl;
-      img.onerror = function() {
-        logoBox.textContent = clientName.trim().substring(0, 2).toUpperCase();
+    var logoEl = document.getElementById('c-logo');
+    var imgSrc = q.get('img');
+    if (imgSrc) {
+      var im = document.createElement('img');
+      im.src = imgSrc;
+      im.onerror = function() {
+        logoEl.textContent = cName.trim().substring(0, 2).toUpperCase();
       };
-      logoBox.appendChild(img);
+      logoEl.appendChild(im);
     } else {
-      logoBox.textContent = clientName.trim().substring(0, 2).toUpperCase();
+      logoEl.textContent = cName.trim().substring(0, 2).toUpperCase();
     }
 
-    var btnContainer = document.getElementById('cButtons');
-    function makeButton(paramKey, labelText, cssClass) {
-      var url = params.get(paramKey);
-      if (url && url.trim() !== '') {
-        var link = document.createElement('a');
-        link.href = url;
-        link.className = 'btn ' + cssClass;
-        link.target = '_blank';
-        link.textContent = labelText;
-        btnContainer.appendChild(link);
+    var btnsBox = document.getElementById('c-btns');
+    function addLink(key, title, cls) {
+      var u = q.get(key);
+      if (u && u.trim() !== '') {
+        var a = document.createElement('a');
+        a.href = u;
+        a.className = 'btn ' + cls;
+        a.target = '_blank';
+        a.textContent = title;
+        btnsBox.appendChild(a);
       }
     }
 
-    makeButton('ya', 'Оставить отзыв в Яндекс Картах', 'btn-yandex');
-    makeButton('dg', 'Оценить нас в 2ГИС', 'btn-2gis');
-    makeButton('tg', 'Наш Telegram-канал', 'btn-blue');
-    makeButton('ig', 'Наш Instagram', 'btn-insta');
+    addLink('ya', '★ Оставить отзыв в Яндекс Картах', 'btn-ya');
+    addLink('dg', '★ Оценить нас в 2ГИС', 'btn-2g');
+    addLink('tg', 'Наш Telegram-канал', 'btn-blue');
+    addLink('ig', 'Наш Instagram', 'btn-ig');
   }
 
-  function makeShort(longUrl, done) {
-    var cbName = 'shortcb_' + Math.floor(Math.random() * 1000000);
-    var timer = setTimeout(function() {
-      done(longUrl);
-    }, 3000);
+  function shorten(longUrl, cb) {
+    var done = false;
+    var cbName = 'cb_' + Math.floor(Math.random() * 1000000);
+    var t = setTimeout(function() {
+      if (!done) { done = true; cb(longUrl); }
+    }, 2500);
 
-    window[cbName] = function(res) {
-      clearTimeout(timer);
-      delete window[cbName];
-      if (res && res.shorturl) {
-        done(res.shorturl);
+    window[cbName] = function(data) {
+      if (done) return;
+      done = true;
+      clearTimeout(t);
+      if (data && data.shorturl) {
+        cb(data.shorturl);
       } else {
-        done(longUrl);
+        cb(longUrl);
       }
     };
 
     var sc = document.createElement('script');
     sc.src = 'https://is.gd' + cbName + '&url=' + encodeURIComponent(longUrl);
     sc.onerror = function() {
-      clearTimeout(timer);
-      done(longUrl);
+      if (!done) { done = true; clearTimeout(t); cb(longUrl); }
     };
     document.body.appendChild(sc);
   }
 
-  document.getElementById('btnCreate').onclick = function() {
-    var nameVal = document.getElementById('fName').value.trim();
-    if (!nameVal) {
+  document.getElementById('btn-gen').onclick = function() {
+    var name = document.getElementById('in-name').value.trim();
+    if (!name) {
       alert('Введите название заведения!');
       return;
     }
-
-    var btn = document.getElementById('btnCreate');
-    btn.textContent = 'Сокращаем ссылку...';
+    var btn = document.getElementById('btn-gen');
+    btn.textContent = 'Создаём ссылку...';
     btn.disabled = true;
 
     var base = window.location.origin + window.location.pathname;
-    var resultUrl = new URL(base);
-    resultUrl.searchParams.set('n', nameVal);
+    var u = new URL(base);
+    u.searchParams.set('n', name);
 
-    var fields = 'img,s,ya,dg,tg,ig'.split(',');
-    var ids = 'fImg,fSub,fYa,fDg,fTg,fIg'.split(',');
+    var keys = 'img,s,ya,dg,tg,ig'.split(',');
+    var ids = 'in-img,in-sub,in-ya,in-dg,in-tg,in-ig'.split(',');
+    for (var i = 0; i < keys.length; i++) {
+      var val = document.getElementById(ids[i]).value.trim();
+      if (val !
 
-    for (var j = 0; j < fields.length; j++) {
-      var val = document.getElementById(ids[j]).value.trim();
-      if (v
+
+
+
+
