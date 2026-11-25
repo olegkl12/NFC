@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NFC Smart Card</title>
+    <title>NFC Smart System</title>
     <style>
         * {
             box-sizing: border-box;
@@ -26,7 +26,7 @@
             width: 100%;
             max-width: 390px;
             margin: 0 auto;
-            background: rgba(26, 29, 36, 0.85);
+            background: rgba(26, 29, 36, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 28px;
             padding: 32px 22px;
@@ -34,9 +34,11 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
+        .client-view, .admin-view, .auth-view {
+            display: none;
+        }
         .client-view {
             text-align: center;
-            display: none;
         }
         .logo-wrapper {
             width: 84px;
@@ -125,16 +127,63 @@
             display: block;
             font-size: 12px;
             color: #9ca3af;
-            margin-bottom: 5px;
+
+
+<button type="button" class="btn btn-preview" id="prevBtn">Открыть карточку клиента</button>
+        </div>
+    </div>
+
+    <!-- КАРТОЧКА КЛИЕНТА (ОТКРЫВАЕТСЯ БЕЗ ПАРОЛЯ ПО NFC) -->
+    <div id="clientView" class="client-view">
+        <div class="logo-wrapper">
+            <span class="logo-initials" id="outLogoText">NFC</span>
+            <img class="logo-img" id="outLogoImg" alt="Logo" onerror="this.style.display='none'; document.getElementById('outLogoText').style.display='block';">
+        </div>
+        <h1 id="outName">Название заведения</h1>
+        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
+        <div class="links" id="outLinks"></div>
+    </div>
+
+    <div class="footer">NFC SMART SYSTEM</div>
+</div>
+
+<script>
+    // ТВОЙ ПАРОЛЬ ОТ ПАНЕЛИ (можешь поменять цифры внутри кавычек)
+    var ADMIN_PASS = '7777';
+
+    var params = new URLSearchParams(window.location.search);
+    var clientName = params.get('n');
+
+    if (clientName) {
+        // Режим клиента: показываем карточку без пароля
+        document.getElementById('clientView').style.display = 'block';
+        document.title = clientName;
+        document.getElementById('outName').textContent = clientName;
+        
+        var words = clientName.trim().split(/\s+/);
+        var w1 = words.shift() || 'N';
+        var w2 = words.shift() || '';
+        document.getElementById('outLogoText').textContent = w1.charAt(0) + w2.charAt(0);
+
+        var logoUrl = params.get('img');
+        if (logoUrl) {
+            var imgEl = document.getElementById('outLogoImg');
+            imgEl.src = logoUrl;
+            imgEl.style.display = 'block';
+            document.getElementById('outLogoText').style.display = 'none';
+        }
+
+        var sub = params.get('s');
+
+
+margin-bottom: 5px;
         }
         input {
-
-
-width: 100%;
+            width: 100%;
             padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(15, 17, 21, 0.8);
+            background: rgba(15, 17, 21, 0.85);
             color: #fff;
             font-size: 14px;
             outline: none;
@@ -181,111 +230,56 @@ width: 100%;
 <body>
 
 <div class="container">
-    <div id="adminView">
+    <!-- ЭКРАН ВХОДА ПО ПАРОЛЮ (ТОЛЬКО ДЛЯ ТЕБЯ) -->
+    <div id="authView" class="auth-view">
+        <div class="admin-title">Доступ ограничен</div>
+        <div class="admin-desc">Введите пароль владельца для открытия генератора</div>
+        <div class="input-group">
+            <input type="password" id="passInput" placeholder="Введите пароль..." style="text-align: center;">
+        </div>
+        <button type="button" class="btn btn-generate" id="loginBtn">Войти в панель</button>
+    </div>
+
+    <!-- РЕДАКТОР (ОТКРЫВАЕТСЯ ПОСЛЕ ПАРОЛЯ) -->
+    <div id="adminView" class="admin-view">
         <div class="admin-title">Генератор NFC-карты</div>
-        <div class="admin-desc">Заполните данные клиента — короткая ссылка создастся автоматически</div>
+        <div class="admin-desc">Заполните только нужные поля — пустые кнопки скроются автоматически</div>
 
         <div class="input-group">
             <label>Название заведения *</label>
-            <input type="text" id="inName" placeholder="Например: Кофейня Бодрость">
+            <input type="text" id="inName" placeholder="Например: BREND SHOP">
         </div>
         <div class="input-group">
-            <label>Ссылка на логотип (необязательно)</label>
-            <input type="text" id="inLogo" placeholder="https://... (прямая ссылка на фото)">
+            <label>Прямая ссылка на фото логотипа (.jpg / .png)</label>
+            <input type="text" id="inLogo" placeholder="Оставьте пустым для красивых букв">
         </div>
         <div class="input-group">
             <label>Текст под названием</label>
             <input type="text" id="inSub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
         </div>
         <div class="input-group">
-            <label>Ссылка на отзывы Яндекс Карты</label>
+            <label>Отзывы Яндекс Карты (необязательно)</label>
             <input type="text" id="inYa" placeholder="https://yandex.ru...">
         </div>
         <div class="input-group">
-            <label>Ссылка на отзывы 2ГИС</label>
-            <input type="text" id="in2gis" placeholder="https://2gis.ru...">
+            <label>Отзывы 2ГИС (необязательно)</label>
+            <input type="text" id="in2gis" placeholder="https://2gis.com...">
         </div>
         <div class="input-group">
-            <label>Ссылка на Telegram</label>
+            <label>Telegram (необязательно)</label>
             <input type="text" id="inTg" placeholder="https://t.me...">
         </div>
         <div class="input-group">
-            <label>Ссылка на Instagram</label>
+            <label>Instagram (необязательно)</label>
             <input type="text" id="inInst" placeholder="https://instagram.com...">
         </div>
 
         <button type="button" class="btn btn-generate" id="genBtn">Создать короткую ссылку</button>
 
         <div id="resultBox" class="result-box">
-            <label style="color: #fff; text-align: center; margin-bottom: 8px;">Короткая ссылка для NFC-метки:</label>
+            <label style="color: #fff; text-align: center; margin-bottom: 8px;">Готовая ссылка для NFC-метки:</label>
             <input type="text" id="finalUrl" class="result-link" readonly>
-            <button type="button" class="btn btn-copy" id="copyBtn">Скопировать короткую ссылку</button>
-            <button type="button" class="btn btn-preview" id="prevBtn">Посмотреть как выглядит у клиента</button>
-        </div>
-    </div>
-
-    <div id="clientView" class="client-view">
-        <div class="logo-wrapper">
-            <span class="logo-initials" id="outLogoText">NFC</span>
-            <img class="logo-img" id="outLogoImg" alt="Logo">
-        </div>
-        <h1 id="outName">Название заведения</h1>
-        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
-        <div class="links" id="outLinks"></div>
-    </div>
-
-    <div class="footer">NFC SMART SYSTEM</div>
-</div>
-
-<script>
-    var params = new URLSearchParams(window.locati
-Статьи, новости и видео от популярных блогеров и СМИ | Будь в теме — будь в Дзене
-dzen.ru
-
-
-on.search);
-    var clientName = params.get('n');
-
-    if (clientName) {
-        document.getElementById('adminView').style.display = 'none';
-        document.getElementById('clientView').style.display = 'block';
-        document.title = clientName;
-        document.getElementById('outName').textContent = clientName;
-        
-        var logoUrl = params.get('img');
-        if (logoUrl) {
-            var imgEl = document.getElementById('outLogoImg');
-            imgEl.src = logoUrl;
-            imgEl.style.display = 'block';
-            document.getElementById('outLogoText').style.display = 'none';
-        } else {
-            var words = clientName.trim().split(/\s+/);
-            var w1 = words.shift() || 'N';
-            var w2 = words.shift() || '';
-            document.getElementById('outLogoText').textContent = w1.charAt(0) + w2.charAt(0);
-        }
-
-        var sub = params.get('s');
-        if (sub) document.getElementById('outSub').textContent = sub;
-
-        var linksContainer = document.getElementById('outLinks');
-        function addBtn(url, text, cls) {
-            if (!url) return;
-            var a = document.createElement('a');
-            a.href = url;
-            a.className = 'btn ' + cls;
-            a.target = '_blank';
-            a.textContent = text;
-            linksContainer.appendChild(a);
-        }
-
-        addBtn(params.get('ya'), '★ Оставить отзыв в Яндекс Картах', 'btn-yandex');
-        addBtn(params.get('dg'), '★ Оценить нас в 2ГИС', 'btn-2gis');
-        addBtn(params.get('tg'), 'Наш Telegram-канал', 'btn-tg');
-        addBtn(params.get('ig'), 'Наш Instagram', 'btn-inst');
-    }
-
-    document.getElementById('genBtn').addEventListener('click', function() {
+            <button type="button" class="btn btn-copy" id="copyBtn">Скопировать ссылку</button>
 
 
 
