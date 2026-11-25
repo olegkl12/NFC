@@ -48,31 +48,33 @@
         </div>
         <div class="input-group">
             <label>Ссылка на отзывы Яндекс Карты</label>
-            <input type="url" id="inYa" placeholder="https://yandex.ru...">
+            <input type="text" id="inYa" placeholder="https://yandex.ru...">
         </div>
         <div class="input-group">
             <label>Ссылка на отзывы 2ГИС</label>
-            <input type="url" id="in2gis" placeholder="https://2gis.ru...">
+            <input type="text" id="in2gis" placeholder="https://2gis.ru...">
         </div>
         <div class="input-group">
             <label>Ссылка на Telegram</label>
-            <input type="url" id="inTg" placeholder="https://t.me...">
+            <input type="text" id="inTg" placeholder="https://t.me...">
         </div>
         <div class="input-group">
             <label>Ссылка на Instagram</label>
-            <input type="url" id="inInst" placeholder="https://instagram.com...">
+            <input type="text" id="inInst" placeholder="https://instagram.com...">
         </div>
 
-        <button class="btn btn-generate" onclick=
+        <button type="button" class="btn btn
+Статьи, новости и видео от популярных блогеров и СМИ | Будь в теме — будь в Дзене
+dzen.ru
 
 
-nerateLink()">Создать персональную ссылку</button>
+erate" id="genBtn">Создать персональную ссылку</button>
 
         <div id="resultBox" class="result-box">
             <label style="color: #fff;">Готовая ссылка для прошивки в NFC:</label>
             <input type="text" id="finalUrl" class="result-link" readonly>
-            <button class="btn btn-copy" onclick="copyLink()">Скопировать ссылку</button>
-            <button class="btn btn-preview" onclick="openPreview()">Посмотреть как выглядит у клиента</button>
+            <button type="button" class="btn btn-copy" id="copyBtn">Скопировать ссылку</button>
+            <button type="button" class="btn btn-preview" id="prevBtn">Посмотреть как выглядит у клиента</button>
         </div>
     </div>
 
@@ -96,12 +98,10 @@ nerateLink()">Создать персональную ссылку</button>
         document.title = clientName;
         document.getElementById('outName').textContent = clientName;
         
-        var words = clientName.trim().split(' ');
-        var initials = words.at(0) ? words.at(0).charAt(0) : 'N';
-        if (words.length > 1 && words.at(1)) {
-            initials += words.at(1).charAt(0);
-        }
-        document.getElementById('outLogo').textContent = initials;
+        var words = clientName.trim().split(/\s+/);
+        var w1 = words.shift() || 'N';
+        var w2 = words.shift() || '';
+        document.getElementById('outLogo').textContent = w1.charAt(0) + w2.charAt(0);
 
         var sub = params.get('s');
         if (sub) document.getElementById('outSub').textContent = sub;
@@ -123,13 +123,13 @@ nerateLink()">Создать персональную ссылку</button>
         addBtn(params.get('ig'), 'Наш Instagram', 'btn-inst');
     }
 
-    function generateLink() {
+    document.getElementById('genBtn').addEventListener('click', function() {
         var name = document.getElementById('inName').value.trim();
         if (!name) {
             alert('Введите название заведения!');
             return;
         }
-        var baseUrl = window.location.href.split('?').at(0);
+        var baseUrl = window.location.origin + window.location.pathname;
         var url = new URL(baseUrl);
         url.searchParams.set('n', name);
         
@@ -150,27 +150,24 @@ nerateLink()">Создать персональную ссылку</button>
 
         document.getElementById('finalUrl').value = url.toString();
         document.getElementById('resultBox').style.display = 'block';
-    }
+    });
 
-    function copyLink() {
+    document.getElementById('copyBtn').addEventListener('click', function() {
         var copyText = document.getElementById('finalUrl');
         copyText.select();
-        navigator.clipboard.writeText(copyText.value);
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(copyText.value);
+        }
         alert('Ссылка скопирована!');
-    }
+    });
 
-    function openPreview() {
+    document.getElementById('prevBtn').addEventListener('click', function() {
         var link = document.getElementById('finalUrl').value;
         window.open(link, '_blank');
-    }
+    });
 </script>
 
 </body>
-</html>"ge
-words.at
-words.at
-
-
-
-
-
+</html>-gen
