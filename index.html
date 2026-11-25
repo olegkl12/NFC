@@ -23,7 +23,6 @@
             padding: 16px;
             position: relative;
         }
-        /* РАЗМЫТЫЙ ПОВЕРНУТЫЙ ФОН С НАДПИСЯМИ NFC */
         .bg-pattern {
             position: fixed;
             top: -50%;
@@ -40,7 +39,7 @@
             z-index: 0;
             user-select: none;
             filter: blur(3px);
-            opacity: 0.06;
+            opacity: 0.07;
         }
         .bg-pattern span {
             font-size: 64px;
@@ -54,7 +53,7 @@
             width: 100%;
             max-width: 390px;
             margin: 0 auto;
-            background: rgba(24, 27, 34, 0.85);
+            background: rgba(24, 27, 34, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 28px;
             padding: 32px 22px;
@@ -62,10 +61,8 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
-        .client-view, .admin-view {
-            display: none;
-        }
         .client-view {
+            display: none;
             text-align: center;
         }
         .logo-wrapper {
@@ -133,11 +130,61 @@
         }
         .btn-yandex { background: #ffcc00; color: #111111; }
         .btn-2gis { background: #2ab930; color: #ffffff; }
-        .btn-tg { background: #24A1DE;
+        .btn-tg { background: #24A1DE; color: #ffffff; }
+        .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%,
 
 
-color: #ffffff; }
-        .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
+Скопировать ссылку</button>
+            <button type="button" class="btn btn-preview" id="btnOpen">Открыть карточку клиента</button>
+        </div>
+    </div>
+
+    <!-- КАРТОЧКА КЛИЕНТА -->
+    <div id="clientView" class="client-view">
+        <div class="logo-wrapper">
+            <span class="logo-initials" id="outLogoText">NFC</span>
+            <img class="logo-img" id="outLogoImg" alt="Logo">
+        </div>
+        <h1 id="outName">Название заведения</h1>
+        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
+        <div class="links" id="outLinks"></div>
+    </div>
+
+    <div class="footer">NFC SMART SYSTEM</div>
+</div>
+
+<script>
+    var bg = document.getElementById('bgPattern');
+    var bgHtml = '';
+    for (var i = 0; i < 60; i++) {
+        bgHtml += '<span>NFC</span>';
+    }
+    bg.innerHTML = bgHtml;
+
+    var params = new URLSearchParams(window.location.search);
+    var clientName = params.get('n');
+
+    if (clientName) {
+        document.getElementById('adminView').style.display = 'none';
+        document.getElementById('clientView').style.display = 'block';
+        document.title = clientName;
+        document.getElementById('outName').textContent = clientName;
+        
+        var clean = clientName.trim();
+        document.getElementById('outLogoText').textContent = clean.substring(0, 2);
+
+        var logoUrl = params.get('img');
+        if (logoUrl) {
+            var imgEl = document.getElementById('outLogoImg');
+            imgEl.onerror = function() {
+                this.style.display = 'none';
+                document.getElementById('outLogoText').style.display = 'block';
+            };
+            imgEl.src = logoUrl;
+            imgEl.style.display = 'block';#d
+
+
+c2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
         
         .admin-title {
             font-size: 20px;
@@ -211,22 +258,11 @@ color: #ffffff; }
 </head>
 <body>
 
-<!-- ФОН С РАЗМЫТЫМИ ПОВЕРНУТЫМИ НАДПИСЯМИ NFC -->
 <div class="bg-pattern" id="bgPattern"></div>
 
 <div class="container">
-    <!-- ЭКРАН ВХОДА ПО ПАРОЛЮ -->
-    <div id="authView">
-        <div class="admin-title">Доступ ограничен</div>
-        <div class="admin-desc">Введите пароль владельца для открытия генератора</div>
-        <div class="input-group">
-            <input type="text" id="passInput" placeholder="Введите пароль..." style="text-align: center;">
-        </div>
-        <button type="button" class="btn btn-generate" id="btnEnter">Войти в панель</button>
-    </div>
-
-    <!-- РЕДАКТОР -->
-    <div id="adminView" class="admin-view">
+    <!-- РЕДАКТОР ОТКРЫТ СРАЗУ БЕЗ ПАРОЛЯ -->
+    <div id="adminView">
         <div class="admin-title">Генератор NFC-карты</div>
         <div class="admin-desc">Заполните нужные поля — пустые кнопки скроются</div>
 
@@ -252,57 +288,19 @@ color: #ffffff; }
         </div>
         <div class="input-group">
             <label>Telegram (необязательно)</label>
-            <input type="text" id="inTg" placeholder="https://t.m
-Статьи, новости и видео от популярных блогеров и СМИ | Будь в теме — будь в Дзене
-dzen.ru
-
-
-e...">
+            <input type="text" id="inTg" placeholder="https://t.me...">
         </div>
         <div class="input-group">
             <label>Instagram (необязательно)</label>
             <input type="text" id="inInst" placeholder="https://instagram.com...">
         </div>
 
-        <button type="button" class="btn btn-generate" id="genBtn">Создать короткую ссылку</button>
+        <button type="button" class="btn btn-generate" id="genBtn">Создать ссылку</button>
 
         <div id="resultBox" class="result-box">
             <label style="color: #fff; text-align: center; margin-bottom: 8px;">Готовая ссылка для NFC-метки:</label>
             <input type="text" id="finalUrl" class="result-link" readonly>
-            <button type="button" class="btn btn-copy" id="btnCopy">Скопировать ссылку</button>
-            <button type="button" class="btn btn-preview" id="btnOpen">Открыть карточку клиента</button>
-        </div>
-    </div>
-
-    <!-- КАРТОЧКА КЛИЕНТА -->
-    <div id="clientView" class="client-view">
-        <div class="logo-wrapper">
-            <span class="logo-initials" id="outLogoText">NFC</span>
-            <img class="logo-img" id="outLogoImg" alt="Logo">
-        </div>
-        <h1 id="outName">Название заведения</h1>
-        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
-        <div class="links" id="outLinks"></div>
-    </div>
-
-    <div class="footer">NFC SMART SYSTEM</div>
-</div>
-
-<script>
-    // Заполняем фон надписями NFC
-    var bg = document.getElementById('bgPattern');
-    var bgHtml = '';
-    for (var i = 0; i < 60; i++) {
-        bgHtml += '<span>NFC</span>';
-    }
-    bg.innerHTML = bgHtml;
-
-    // Проверка ссылки (клиент или админ)
-    var params = new URLSearchParams(window.location.search);
-    var clientName = params.get('n');
-
-    if (clientName) {
-        document.getElementById('authView').style.display = 'none';
+            <button type="button" class="btn btn-copy" id="btnCopy">
 
 
 
