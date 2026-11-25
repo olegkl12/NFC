@@ -1,303 +1,147 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NFC Smart System</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background: radial-gradient(circle at top right, #1e2538, #090b10 75%);
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            position: relative;
-        }
-        .bg-pattern {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center;
-            gap: 45px 60px;
-            transform: rotate(-28deg);
-            pointer-events: none;
-            z-index: 0;
-            user-select: none;
-            filter: blur(3px);
-            opacity: 0.07;
-        }
-        .bg-pattern span {
-            font-size: 64px;
-            font-weight: 900;
-            letter-spacing: 6px;
-            color: #ffffff;
-        }
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 390px;
-            margin: 0 auto;
-            background: rgba(24, 27, 34, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 28px;
-            padding: 32px 22px;
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        .client-view {
-            display: none;
-            text-align: center;
-        }
-        .logo-wrapper {
-            width: 84px;
-            height: 84px;
-            margin: 0 auto 18px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2d3446, #181b24);
-            border: 2px solid rgba(255, 255, 255, 0.18);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-        }
-        .logo-initials {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-        h1 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.25;
-            word-wrap: break-word;
-        }
-        p.subtitle {
-            font-size: 14px;
-            color: #9ca3af;
-            margin-bottom: 26px;
-            line-height: 1.45;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 18px;
-            border-radius: 16px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            line-height: 1.3;
-            transition: transform 0.15s ease;
-        }
-        .btn:active {
-            transform: scale(0.97);
-        }
-        .btn-yandex { background: #ffcc00; color: #111111; }
-        .btn-2gis { background: #2ab930; color: #ffffff; }
-        .btn-tg { background: #24A1DE; color: #ffffff; }
-        .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%,
-
-
-Скопировать ссылку</button>
-            <button type="button" class="btn btn-preview" id="btnOpen">Открыть карточку клиента</button>
-        </div>
-    </div>
-
-    <!-- КАРТОЧКА КЛИЕНТА -->
-    <div id="clientView" class="client-view">
-        <div class="logo-wrapper">
-            <span class="logo-initials" id="outLogoText">NFC</span>
-            <img class="logo-img" id="outLogoImg" alt="Logo">
-        </div>
-        <h1 id="outName">Название заведения</h1>
-        <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
-        <div class="links" id="outLinks"></div>
-    </div>
-
-    <div class="footer">NFC SMART SYSTEM</div>
-</div>
-
-<script>
-    var bg = document.getElementById('bgPattern');
-    var bgHtml = '';
-    for (var i = 0; i < 60; i++) {
-        bgHtml += '<span>NFC</span>';
-    }
-    bg.innerHTML = bgHtml;
-
-    var params = new URLSearchParams(window.location.search);
-    var clientName = params.get('n');
-
-    if (clientName) {
-        document.getElementById('adminView').style.display = 'none';
-        document.getElementById('clientView').style.display = 'block';
-        document.title = clientName;
-        document.getElementById('outName').textContent = clientName;
-        
-        var clean = clientName.trim();
-        document.getElementById('outLogoText').textContent = clean.substring(0, 2);
-
-        var logoUrl = params.get('img');
-        if (logoUrl) {
-            var imgEl = document.getElementById('outLogoImg');
-            imgEl.onerror = function() {
-                this.style.display = 'none';
-                document.getElementById('outLogoText').style.display = 'block';
-            };
-            imgEl.src = logoUrl;
-            imgEl.style.display = 'block';#d
-
-
-c2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
-        
-        .admin-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-        .admin-desc {
-            font-size: 13px;
-            color: #9ca3af;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 13px;
-        }
-        label {
-            display: block;
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(15, 17, 21, 0.9);
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-        }
-        input:focus {
-            border-color: #24A1DE;
-        }
-        .btn-generate {
-            background: #ffffff;
-            color: #0f1115;
-            margin-top: 8px;
-        }
-        .result-box {
-            margin-top: 18px;
-            padding: 14px;
-            background: rgba(36, 161, 222, 0.12);
-            border: 1px solid rgba(36, 161, 222, 0.35);
-            border-radius: 16px;
-            display: none;
-        }
-        .result-link {
-            width: 100%;
-            background: #0f1115;
-            color: #7dd3fc;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .btn-copy { background: #24A1DE; color: #fff; padding: 11px; font-size: 13px; margin-bottom: 8px; }
-        .btn-preview { background: rgba(255,255,255,0.1); color: #fff; padding: 11px; font-size: 13px; }
-        .footer {
-            margin-top: 26px;
-            font-size: 11px;
-            color: #5c6270;
-            text-align: center;
-            letter-spacing: 0.5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFC Smart System</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  body {
+    min-height: 100vh;
+    background-color: #0b0d12;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='200' height='200'%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-weight='900' font-size='46' fill='rgba(255,255,255,0.08)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-30 100 100)'%3ENFC%3C/text%3E%3C/svg%3E");
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+  .box {
+    width: 100%;
+    max-width: 380px;
+    background: rgba(24, 27, 34, 0.92);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 28px 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+  }
+  h2 { font-size: 20px; text-align: center; margin-bottom: 6px; }
+  .sub { font-size: 13px; color: #9ca3af; text-align: center; margin-bottom: 18px; }
+  label { display: block; font-size: 12px; color: #9ca3af; margin: 10px 0 4px; }
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #353b47;
+    background: #0f1115;
+    color: #fff;
+    font-size: 14px;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn-w { background: #fff; color: #000; }
+  .btn-b { background: #24A1DE; color: #fff; }
+  .btn-g { background: #2e333d; color: #fff; }
+  .btn-ya { background: #ffcc00; color: #000; }
+  .btn-2g { background: #2ab930; color: #fff; }
+  .btn-ig { background: #dc2743; color: #fff; }
+  .logo {
+    width: 80px; height: 80px; border-radius: 50%; background: #2b303b;
+    margin: 0 auto 14px; display: flex; justify-content: center; align-items: center;
+    font-size: 26px; font-weight: bold; overflow: hidden; border: 2px solid rgba(255,255,255,0.2);
+  }
+  .logo img { width: 100%; height: 100%; object-fit: cover; }
+  .res { margin-top: 16px; padding: 12px; background: #14222e; border-radius: 12px; display: none; }
+</style>
 </head>
 <body>
 
-<div class="bg-pattern" id="bgPattern"></div>
+<div class="box" id="app">
+  <h2>Генератор NFC-карты</h2>
+  <p class="sub">Заполните нужные поля — пустые кнопки скроются</p>
 
-<div class="container">
-    <!-- РЕДАКТОР ОТКРЫТ СРАЗУ БЕЗ ПАРОЛЯ -->
-    <div id="adminView">
-        <div class="admin-title">Генератор NFC-карты</div>
-        <div class="admin-desc">Заполните нужные поля — пустые кнопки скроются</div>
+  <label>Название заведения *</label>
+  <input id="n" placeholder="Например: BREND SHOP">
 
-        <div class="input-group">
-            <label>Название заведения *</label>
-            <input type="text" id="inName" placeholder="Например: BREND SHOP">
-        </div>
-        <div class="input-group">
-            <label>Прямая ссылка на фото логотипа (.jpg / .png)</label>
-            <input type="text" id="inLogo" placeholder="Оставьте пустым для красивых букв">
-        </div>
-        <div class="input-group">
-            <label>Текст под названием</label>
-            <input type="text" id="inSub" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
-        </div>
-        <div class="input-group">
-            <label>Отзывы Яндекс Карты (необязательно)</label>
-            <input type="text" id="inYa" placeholder="https://yandex.ru...">
-        </div>
-        <div class="input-group">
-            <label>Отзывы 2ГИС (необязательно)</label>
-            <input type="text" id="in2gis" placeholder="https://2gis.com...">
-        </div>
-        <div class="input-group">
-            <label>Telegram (необязательно)</label>
-            <input type="text" id="inTg" placeholder="https://t.me...">
-        </div>
-        <div class="input-group">
-            <label>Instagram (необязательно)</label>
-            <input type="text" id="inInst" placeholder="https://instagram.com...">
-        </div>
+  <label>Прямая ссылка на логотип (.jpg / .png)</label>
+  <input id="img" placeholder="Необязательно">
 
-        <button type="button" class="btn btn-generate" id="genBtn">Создать ссылку</button>
+  <label>Текст под названием</label>
+  <input id="s" value="Спасибо, что выбрали нас! Оставьте отзыв или подпишитесь">
 
-        <div id="resultBox" class="result-box">
-            <label style="color: #fff; text-align: center; margin-bottom: 8px;">Готовая ссылка для NFC-метки:</label>
-            <input type="text" id="finalUrl" class="result-link" readonly>
-            <button type="button" class="btn btn-copy" id="btnCopy">
+  <label>Отзывы Яндекс Карты</label>
+  <input id="ya" placeholder="https://yandex.ru...">
+
+  <label>Отзывы 2ГИС</label>
+  <input id="dg" placeholder="https://2gis.com...">
+
+  <label>Telegram</label>
+  <input id="tg" placeholder="https://t.me...">
+
+  <label>Instagram</label>
+  <input id="ig" placeholder="https://instagram.com...">
+
+  <button class="btn btn-w" onclick="make()">Создать ссылку</button>
+
+  <div class="res" id="res">
+    <label style="color:#fff;margin-top:0">Готовая ссылка для NFC:</label>
+    <input id="out" readonly style="color:#7dd3fc;text-align:center">
+    <button class="btn btn-b" onclick="cp()">Скопировать ссылку</button>
+    <a class="btn btn-g" id="lnk" target="_blank">Открыть карточку клиента</a>
+  </div>
+</div>
+
+<script>
+var q = new URLSearchParams(location.search);
+if (q.get('n')) {
+  var name = q.get('n');
+  document.title = name;
+  var logo = q.get('img') ? '<img src="' + q.get('img') + '">' : name.slice(0,2).toUpperCase();
+  var html = '<div class="logo">' + logo + '</div>';
+  html += '<h2>' + name + '</h2>';
+  html += '<p class="sub">' + (q.get('s') || '') + '</p>';
+  if (q.get('ya')) html += '<a class="btn btn-ya" href="' + q.get('ya') + '" target="_blank">★ Оставить отзыв в Яндекс
+
+
+/a>';
+  if (q.get('dg')) html += '<a class="btn btn-2g" href="' + q.get('dg') + '" target="_blank">★ Оценить нас в 2ГИС</a>';
+  if (q.get('tg')) html += '<a class="btn btn-b" href="' + q.get('tg') + '" target="_blank">Наш Telegram-канал</a>';
+  if (q.get('ig')) html += '<a class="btn btn-ig" href="' + q.get('ig') + '" target="_blank">Наш Instagram</a>';
+  document.getElementById('app').innerHTML = html;
+}
+
+function make() {
+  var name = document.getElementById('n').value.trim();
+  if (!name) return alert('Введите название!');
+  var u = new URL(location.origin + location.pathname);
+  'n,img,s,ya,dg,tg,ig'.split(',').forEach(function(id) {
+    var v = document.getElementById(id).value.trim();
+    if (v) u.searchParams.set(id, v);
+  });
+  var final = u.toString();
+  document.getElementById('out').value = final;
+  document.getElementById('lnk').href = final;
+  document.getElementById('res').style.display = 'block';
+}
+
+function cp() {
+  var el = document.getElementById('out');
+  el.select();
+  document.execCommand('copy');
+  alert('Скопировано!');
+}
+</script>
+</body>
+</html> Картах<
