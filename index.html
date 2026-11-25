@@ -169,26 +169,7 @@
 dzen.ru
 
 
-== '') u.searchParams.set(keys[i], val);
-    }
 
-    shorten(u.toString(), function(finalUrl) {
-      document.getElementById('out-url').value = finalUrl;
-      document.getElementById('btn-open').href = finalUrl;
-      document.getElementById('res-box').style.display = 'block';
-      btn.textContent = 'Создать короткую ссылку';
-      btn.disabled = false;
-    });
-  };
-
-  document.getElementById('btn-copy').onclick = function() {
-    var inp = document.getElementById('out-url');
-    inp.select();
-    inp.setSelectionRange(0, 99999);
-    document.execCommand('copy');
-    if (navigator.clipboard) navigator.clipboard.writeText(inp.value);
-    alert('Ссылка скопирована!');
-  };
 </script>
 </body>
 </html> <i
