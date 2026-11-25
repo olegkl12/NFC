@@ -26,15 +26,13 @@
             width: 100%;
             max-width: 390px;
             margin: 0 auto;
-            background: rgba(26, 29, 36, 0.88);
+            background: rgba(26, 29, 36, 0.92);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 28px;
             padding: 32px 22px;
             box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
         }
-        .client-view, .admin-view, .auth-view {
+        .client-view, .admin-view {
             display: none;
         }
         .client-view {
@@ -103,9 +101,9 @@
         .btn:active {
             transform: scale(0.97);
         }
-        .btn-yandex { background: #ffcc00; color: #111111; box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2); }
-        .btn-2gis { background: #2ab930; color: #ffffff; box-shadow: 0 4px 15px rgba(42, 185, 48, 0.2); }
-        .btn-tg { background: #24A1DE; color: #ffffff; box-shadow: 0 4px 15px rgba(36, 161, 222, 0.2); }
+        .btn-yandex { background: #ffcc00; color: #111111; }
+        .btn-2gis { background: #2ab930; color: #ffffff; }
+        .btn-tg { background: #24A1DE; color: #ffffff; }
         .btn-inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
         
         .admin-title {
@@ -127,17 +125,17 @@
             display: block;
             font-size: 12px;
             color: #9ca3af;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(15, 17, 21,
 
 
-<button type="button" class="btn btn-preview" id="prevBtn">Открыть карточку клиента</button>
-        </div>
-    </div>
-
-    <!-- КАРТОЧКА КЛИЕНТА (ОТКРЫВАЕТСЯ БЕЗ ПАРОЛЯ ПО NFC) -->
-    <div id="clientView" class="client-view">
-        <div class="logo-wrapper">
-            <span class="logo-initials" id="outLogoText">NFC</span>
-            <img class="logo-img" id="outLogoImg" alt="Logo" onerror="this.style.display='none'; document.getElementById('outLogoText').style.display='block';">
+o-img" id="outLogoImg" alt="Logo" onerror="this.style.display='none'; document.getElementById('outLogoText').style.display='block';">
         </div>
         <h1 id="outName">Название заведения</h1>
         <p class="subtitle" id="outSub">Спасибо, что выбрали нас!</p>
@@ -148,14 +146,13 @@
 </div>
 
 <script>
-    // ТВОЙ ПАРОЛЬ ОТ ПАНЕЛИ (можешь поменять цифры внутри кавычек)
-    var ADMIN_PASS = '7777';
-
+    var ADMIN_PASS = '050510';
     var params = new URLSearchParams(window.location.search);
     var clientName = params.get('n');
 
     if (clientName) {
-        // Режим клиента: показываем карточку без пароля
+        document.getElementById('authView').style.display = 'none';
+        document.getElementById('adminView').style.display = 'none';
         document.getElementById('clientView').style.display = 'block';
         document.title = clientName;
         document.getElementById('outName').textContent = clientName;
@@ -174,16 +171,17 @@
         }
 
         var sub = params.get('s');
+        if (sub) document.getElementById('outSub').textContent = sub;
+
+        var linksContainer = document.getElementById('outLinks');
+        function addBtn(url, text, cls) {
+            if (!url) return;
+            var a = document.createElement('a');
+            a.href = url;
+            a.className = 'btn ' + cls; 0
 
 
-margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(15, 17, 21, 0.85);
+.9);
             color: #fff;
             font-size: 14px;
             outline: none;
@@ -230,8 +228,8 @@ margin-bottom: 5px;
 <body>
 
 <div class="container">
-    <!-- ЭКРАН ВХОДА ПО ПАРОЛЮ (ТОЛЬКО ДЛЯ ТЕБЯ) -->
-    <div id="authView" class="auth-view">
+    <!-- ЭКРАН ВХОДА ПО ПАРОЛЮ -->
+    <div id="authView">
         <div class="admin-title">Доступ ограничен</div>
         <div class="admin-desc">Введите пароль владельца для открытия генератора</div>
         <div class="input-group">
@@ -240,10 +238,10 @@ margin-bottom: 5px;
         <button type="button" class="btn btn-generate" id="loginBtn">Войти в панель</button>
     </div>
 
-    <!-- РЕДАКТОР (ОТКРЫВАЕТСЯ ПОСЛЕ ПАРОЛЯ) -->
+    <!-- РЕДАКТОР -->
     <div id="adminView" class="admin-view">
         <div class="admin-title">Генератор NFC-карты</div>
-        <div class="admin-desc">Заполните только нужные поля — пустые кнопки скроются автоматически</div>
+        <div class="admin-desc">Заполните нужные поля — пустые кнопки скроются</div>
 
         <div class="input-group">
             <label>Название заведения *</label>
@@ -280,8 +278,12 @@ margin-bottom: 5px;
             <label style="color: #fff; text-align: center; margin-bottom: 8px;">Готовая ссылка для NFC-метки:</label>
             <input type="text" id="finalUrl" class="result-link" readonly>
             <button type="button" class="btn btn-copy" id="copyBtn">Скопировать ссылку</button>
+            <button type="button" class="btn btn-preview" id="prevBtn">Открыть карточку клиента</button>
+        </div>
+    </div>
 
-
-
-
-
+    <!-- КАРТОЧКА КЛИЕНТА -->
+    <div id="clientView" class="client-view">
+        <div class="logo-wrapper">
+            <span class="logo-initials" id="outLogoText">NFC</span>
+            <img class="log
