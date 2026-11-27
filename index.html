@@ -112,21 +112,29 @@ addB('dg','Оценить в 2ГИС','🗺️','⭐⭐⭐⭐⭐','t-dg');
 addB('tg','Наш Telegram-канал','✈️','','t-tg');
 addB('ig','Мы в Instagram','📸','','t-ig');
 }else{
-var H='451f8c39f21f99596566f924f5019bc9227922c60669410a0700a629880786c0',fl=0,lk=0;
-async function h256(str){
-var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('nfc_wave_2026_salt_'+str));
-return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');
+var fl=0,lk=0;
+function chk(str){
+var h1=0xdeadbeef,h2=0x41c6ce57,s='nfc2026_'+str;
+for(var i=0;i<s.length;i++){
+var ch=s.charCodeAt(i);
+h1=Math.imul(h1^ch,2654435761);
+h2=Math.imul(h2^ch,1597334677);
 }
-if(sessionStorage.getItem('ok')===H){
+h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+return (4294967296*(2097151&h2)+(h1>>>0)).toString(16);
+}
+var KEY='1177d326973bc2';
+if(sessionStorage.getItem('ok')===KEY){
 document.getElementById('v-auth').style.display='none';
 document.getElementById('v-adm').style.display='block';
 }
-async function login(){
+function login(){
 var now=Date.now(),er=document.getElementById('err');
 if(now<lk){er.textContent='Подождите '+Math.ceil((lk-now)/1000)+' сек.';er.style.display='block';return;}
 var v=document.getElementById('p-in').value.trim();
-if(await h256(v)===H){
-sessionStorage.setItem('ok',H);
+if(chk(v)===KEY){
+sessionStorage.setItem('ok',KEY);
 document.getElementById('v-auth').style.display='none';
 document.getElementById('v-adm').style.display='block';
 }else{
